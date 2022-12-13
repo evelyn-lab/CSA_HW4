@@ -8,10 +8,7 @@
 
 ```cpp
 #include <iostream>
-#include <vector>
 #include <mutex>
-#include <chrono>
-#include <deque>
 #include <pthread.h>
 
 std::mutex mtx;
