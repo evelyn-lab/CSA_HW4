@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
         } else {
             do {
                 std::cout << "please enter count of students in range [2;15]" << std::endl << "> ";
-                std::cin >> count_of_students;                                                   // Count of bees.
+                std::cin >> count_of_students;                                                   
             } while (count_of_students < 2 || count_of_students > 15);
             std::cout << std::endl;
         }
