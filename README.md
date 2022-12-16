@@ -7,26 +7,26 @@
 ### Модель параллельных вычислений
 При решении была использована парадигма «клиент-сервер». 
 <img width="401" alt="Снимок экрана 2022-12-12 в 18 30 46" src="https://user-images.githubusercontent.com/86932751/207085672-4b4a0dc3-97c6-4a82-9870-1195d3cb8441.png">
-### Код ( файл solution.cpp)
+### Код (файл solution.cpp) с комментариями
 ```cpp
 #include <iostream>
 #include <mutex>
 #include <vector>
 #include <pthread.h>
 
-std::mutex mtx;
-static bool is_file_input = false;
-static std::vector<int> nums_taken;
-static int counter = 0;
+std::mutex mtx; // синхропримитив
+static bool is_file_input = false; // должен ли ввод осуществляться из файла
+static std::vector<int> nums_taken; // "занятые" номера билетов
+static int counter = 0; // для вывода порядкового номера студента  
 static FILE *file_out = fopen("output.txt", "w");
-static int count_of_students = 0;
+static int count_of_students = 0; // количество потоков (студентов)
 
 void getMark(int id) {
     std::string marks[] = {"A","A+","A-","B","B+", "B-","C",
-                           "C+", "C-","D", "D+", "D-", "F", "F+", "F-"};
-    int random = rand() % 15;
-    std::string mark = marks[random];
-    mtx.lock();
+                           "C+", "C-","D", "D+", "D-", "F", "F+", "F-"}; // массив оценок
+    int random = rand() % 15; // рандом на элемент массива 
+    std::string mark = marks[random]; // выбор оценки с учетом рандома 
+    mtx.lock(); 
     std::cout << "student #"  << id << " turned in the question paper "<< std::endl;
     std::string outline = "student #"  + std::to_string(id) + " turned in the question paper " +'\n';
     fprintf(file_out, "%s", outline.c_str());
@@ -38,22 +38,20 @@ void getMark(int id) {
     mtx.unlock();
 }
 void finishWork(int id) {
-    mtx.lock();
     std::cout << "student #" << id << " finished the question paper "<< std::endl;
     std::cout << std::endl;
     std::string outline = "student #"  + std::to_string(id) + " finished the question paper " +'\n';
     fprintf(file_out, "%s", outline.c_str());
-    mtx.unlock();
     getMark(id);
 }
 
 void *studentWorks(void *vargp) {
     mtx.lock();
     int id = ++counter;
-    int number;
+    int number; // номер билета 
     do {
-        number = 1 + (rand() % count_of_students);
-    } while (std::count(nums_taken.begin(), nums_taken.end(), number));
+        number = 1 + (rand() % count_of_students); // генератор номера билета  
+    } while (std::count(nums_taken.begin(), nums_taken.end(), number)); // проверка номера
     nums_taken.push_back(number);
     std::cout << "student #"  << id << " got question paper "<< number << std::endl;
     std::string outline = "student #" + std::to_string(id) + " got question paper " + std::to_string(number) + '\n';
@@ -96,18 +94,20 @@ int main(int argc, char *argv[]) {
         return 0;
     }
     std::cout << std::endl;
-    pthread_t students[count_of_students];
+    pthread_t students[count_of_students]; // массив потоков
     for(size_t i = 0; i < count_of_students; i++) {
-        pthread_create(&students[i], NULL, studentWorks, (void *)&students[i]);
+        pthread_create(&students[i], NULL, studentWorks, (void *)&students[i]); // вызов функции для каждого потока
     }
    for (size_t i = 0; i < count_of_students; i++) {
-        pthread_join(students[i], NULL);
+        pthread_join(students[i], NULL); 
     }
     return 0;
 }
 ```
 ### Входные данные 
 Одно число в диапазоне [2;15] - количество студентов на экзамене.
+### Консольный ввод данных
+В начале программы пользователь может выбрать ввод с консоли или из файла. 
 ### Сихнропримитив
 В ходе решения используется мьютекс
 ```cpp
@@ -120,6 +120,15 @@ int main(int argc, char *argv[]) {
 ```
 ## 5 баллов 
 ### Сценарий работы программы 
+Как объекты, студенты одновремнно выполняют одно и то же действие, т.е. решают экзамен. Выдача билетов ( то есть по сути распределение вариантов между студентами ) в моей реализации также происходит одновременно, а вот проверка работы преподавателем после сдачи и выставление оценки уже отдельно для каждого.  
 ## 6 баллов
 ### Обобщение алгоритма решения словесного сценария
-### Ввод из командной строки
+Алгоритм решения заключается в создании заданного пользователем числа потоков (количество студентов). Далее происходит распределение вариантов с помощью функции *rand()* и проверка нахождения номера билета в векторе *nums_taken* (т.е. занят ли билет другим студентом). Чтобы не присходило коллизии номеров (один и тот же билет не может быть занят несколькими студентами) эта операция блокируется мьютексом. Затем идет функция завершения работы (т.е. просто выводиться сообщение о завершении студентом написания билета) и билет сдаётся преподавателю (происходит обращение к серверу). Процесс сдачи также блокируется мьютексом т.к. преподавателю нужно время на проверку работы студента. После выводится оценка студента и поток завершает работу (ответ сервера). 
+### Ввод данных из командной строки
+Ввод данных из командной строки реализован. 
+## 7 баллов 
+### Ввод данных из файла и вывод в файл 
+Ввод данных из файла реализован. Результаты работы программы выводятся на экран и записываются в файл. 
+### Входные и выходные файлы
+входные файлы находятся вот тут: 
+соответствующие им выходные файлы находятся вот тут: 
