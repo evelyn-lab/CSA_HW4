@@ -132,3 +132,4 @@ int main(int argc, char *argv[]) {
 ### Входные и выходные файлы
 входные файлы находятся вот тут: https://github.com/evelyn-lab/CSA_HW4/tree/main/input_files
 соответствующие им выходные файлы находятся вот тут: https://github.com/evelyn-lab/CSA_HW4/tree/main/output_files
+Учтите, что для корректной работы программы файлы должны называться input.txt и output.txt.
