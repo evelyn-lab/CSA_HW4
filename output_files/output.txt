@@ -1,0 +1,24 @@
+student #1 got question paper 4
+student #1 started writing down his answers
+student #1 finished the question paper 
+
+student #1 turned in the question paper 
+student #2 got question paper 2
+student #2 started writing down his answers
+student #2 finished the question paper 
+
+student #2 turned in the question paper 
+student #2 got the C- mark
+student #3 got question paper 3
+student #3 started writing down his answers
+student #3 finished the question paper 
+
+student #3 turned in the question paper 
+student #3 got the A- mark
+student #4 got question paper 1
+student #4 started writing down his answers
+student #4 finished the question paper 
+
+student #1 got the B+ mark
+student #4 turned in the question paper 
+student #4 got the C- mark
